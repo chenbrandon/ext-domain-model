@@ -24,41 +24,41 @@ class MoneyTests: XCTestCase {
   func testCanICreateMoney() {
     let oneUSD = Money(amount: 1, currency: "USD")
     XCTAssert(oneUSD.amount == 1)
-    XCTAssert(oneUSD.currency == "USD")
+    XCTAssert(oneUSD.currency == Currency.USD)
     
     let tenGBP = Money(amount: 10, currency: "GBP")
     XCTAssert(tenGBP.amount == 10)
-    XCTAssert(tenGBP.currency == "GBP")
+    XCTAssert(tenGBP.currency == Currency.GBP)
   }
   
   func testUSDtoGBP() {
     let gbp = tenUSD.convert("GBP")
-    XCTAssert(gbp.currency == "GBP")
+    XCTAssert(gbp.currency == Currency.GBP)
     XCTAssert(gbp.amount == 5)
   }
   func testUSDtoEUR() {
     let eur = tenUSD.convert("EUR")
-    XCTAssert(eur.currency == "EUR")
+    XCTAssert(eur.currency == Currency.EUR)
     XCTAssert(eur.amount == 15)
   }
   func testUSDtoCAN() {
     let can = twelveUSD.convert("CAN")
-    XCTAssert(can.currency == "CAN")
+    XCTAssert(can.currency == Currency.CAN)
     XCTAssert(can.amount == 15)
   }
   func testGBPtoUSD() {
     let usd = fiveGBP.convert("USD")
-    XCTAssert(usd.currency == "USD")
+    XCTAssert(usd.currency == Currency.USD)
     XCTAssert(usd.amount == 10)
   }
   func testEURtoUSD() {
     let usd = fifteenEUR.convert("USD")
-    XCTAssert(usd.currency == "USD")
+    XCTAssert(usd.currency == Currency.USD)
     XCTAssert(usd.amount == 10)
   }
   func testCANtoUSD() {
     let usd = fifteenCAN.convert("USD")
-    XCTAssert(usd.currency == "USD")
+    XCTAssert(usd.currency == Currency.USD)
     XCTAssert(usd.amount == 12)
   }
   
@@ -84,13 +84,13 @@ class MoneyTests: XCTestCase {
   func testAddUSDtoUSD() {
     let total = tenUSD.add(tenUSD)
     XCTAssert(total.amount == 20)
-    XCTAssert(total.currency == "USD")
+    XCTAssert(total.currency == Currency.USD)
   }
   
   func testAddUSDtoGBP() {
     let total = tenUSD.add(fiveGBP)
     XCTAssert(total.amount == 10)
-    XCTAssert(total.currency == "GBP")
+    XCTAssert(total.currency == Currency.GBP)
   }
 }
 

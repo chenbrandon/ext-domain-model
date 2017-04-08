@@ -17,57 +17,54 @@ open class TestMe {
         return "I have been tested"
     }
 }
+public enum Currency: String {
+    case USD = "USD"
+    case GBP = "GBP"
+    case EUR = "EUR"
+    case CAN = "CAN"
+}
 
 ////////////////////////////////////
 // Money
 //
 public struct Money {
     public var amount : Int
-    public var currency : String
-    
-    
+    public var currency : Currency
     init(amount: Int, currency: String) {
         self.amount = amount
-        self.currency = currency
+        self.currency = Currency(rawValue: currency)!
     }
-    
-    
     public func convert(_ to: String) -> Money {
         var money: Int
         switch self.currency { // change money USD
-        case "USD":
+        case .USD:
             money = self.amount
-        case "GBP":
+        case .GBP:
             money = self.amount * 2
-        case "CAN":
+        case .CAN:
             money = self.amount * 4 / 5
-        case "EUR":
+        case .EUR:
             money = self.amount * 2 / 3
-        default: // shouldn't reach here
-            money = self.amount
         }
-        switch to {
-        case "GBP":
+        switch Currency(rawValue: to)! {
+        case .GBP:
             return Money(amount: money / 2, currency: to)
-        case "EUR":
+        case .EUR:
             return Money(amount: money * 3 / 2, currency: to)
-        case "CAN":
+        case .CAN:
             return Money(amount: money * 5 / 4, currency: to)
-        case "USD":
-            return Money(amount: money, currency: to)
-        default:
+        case .USD:
             return Money(amount: money, currency: to)
         }
     }
-    
     public func add(_ to: Money) -> Money {
-        let money = (self.convert(to.currency)).amount
-        return Money(amount: money + to.amount, currency: to.currency)
+        let money = (self.convert(to.currency.rawValue)).amount
+        return Money(amount: money + to.amount, currency: to.currency.rawValue)
     }
     
     public func subtract(_ from: Money) -> Money {
-        let money = (self.convert(from.currency)).amount
-        return Money(amount: money + from.amount, currency: from.currency)
+        let money = (self.convert(from.currency.rawValue)).amount
+        return Money(amount: money + from.amount, currency: from.currency.rawValue)
     }
 }
 
