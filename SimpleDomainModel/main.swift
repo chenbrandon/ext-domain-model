@@ -17,6 +17,10 @@ open class TestMe {
         return "I have been tested"
     }
 }
+
+////////////////////////////////////
+// Money
+//
 public enum Currency: String {
     case USD = "USD"
     case GBP = "GBP"
@@ -24,16 +28,48 @@ public enum Currency: String {
     case CAN = "CAN"
 }
 
-////////////////////////////////////
-// Money
-//
 public struct Money {
     public var amount : Int
     public var currency : Currency
+    
+    // legacy version to create with string
     init(amount: Int, currency: String) {
         self.amount = amount
         self.currency = Currency(rawValue: currency)!
     }
+    
+    // create money with currency enum
+    init(amount: Int, currency: Currency) {
+        self.currency = currency
+        self.amount = amount
+    }
+    
+    // convert money with currency enum
+    public func convert(_ to: Currency) -> Money {
+        var money: Int
+        switch self.currency { // change money USD
+        case .USD:
+            money = self.amount
+        case .GBP:
+            money = self.amount * 2
+        case .CAN:
+            money = self.amount * 4 / 5
+        case .EUR:
+            money = self.amount * 2 / 3
+        }
+        switch to {
+        case .GBP:
+            return Money(amount: money / 2, currency: to)
+        case .EUR:
+            return Money(amount: money * 3 / 2, currency: to)
+        case .CAN:
+            return Money(amount: money * 5 / 4, currency: to)
+        case .USD:
+            return Money(amount: money, currency: to)
+        }
+    }
+    
+    // legacy version to convert with string
     public func convert(_ to: String) -> Money {
         var money: Int
         switch self.currency { // change money USD
@@ -61,7 +97,6 @@ public struct Money {
         let money = (self.convert(to.currency.rawValue)).amount
         return Money(amount: money + to.amount, currency: to.currency.rawValue)
     }
-    
     public func subtract(_ from: Money) -> Money {
         let money = (self.convert(from.currency.rawValue)).amount
         return Money(amount: money + from.amount, currency: from.currency.rawValue)
