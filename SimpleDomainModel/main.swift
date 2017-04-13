@@ -1,9 +1,9 @@
 //
 //  main.swift
-//  SimpleDomainModel
+//  ExtDomainModel
 //
-//  Created by Ted Neward on 4/6/16.
-//  Copyright © 2016 Ted Neward. All rights reserved.
+//  Created by Brandon Chen on 4/11/17.
+//  Copyright © 2017 Brandon Chen. All rights reserved.
 //
 
 import Foundation
@@ -18,6 +18,24 @@ open class TestMe {
     }
 }
 
+protocol Mathematics {
+    func add(_: Money) -> Money
+    func subtract(_: Money) -> Money
+}
+
+protocol CustomStringConvertible {
+    var description: String {
+        get
+    }
+}
+
+extension Double {
+    var USD: Money {return Money(amount: Int(self), currency: Currency.USD)}
+    var EUR: Money {return Money(amount: Int(self), currency: Currency.EUR)}
+    var GBP: Money {return Money(amount: Int(self), currency: Currency.GBP)}
+    var CAN: Money {return Money(amount: Int(self), currency: Currency.CAN)}
+}
+
 ////////////////////////////////////
 // Money
 //
@@ -28,7 +46,12 @@ public enum Currency: String {
     case CAN = "CAN"
 }
 
-public struct Money {
+public struct Money: CustomStringConvertible, Mathematics {
+    
+    var description: String {
+        return ("\(currency.rawValue)\(Double(amount))")
+    }
+    
     public var amount : Int
     public var currency : Currency
     
@@ -95,11 +118,11 @@ public struct Money {
     }
     public func add(_ to: Money) -> Money {
         let money = (self.convert(to.currency.rawValue)).amount
-        return Money(amount: money + to.amount, currency: to.currency.rawValue)
+        return Money(amount: money + to.amount, currency: to.currency)
     }
     public func subtract(_ from: Money) -> Money {
         let money = (self.convert(from.currency.rawValue)).amount
-        return Money(amount: money + from.amount, currency: from.currency.rawValue)
+        return Money(amount: money - from.amount, currency: from.currency)
     }
 }
 
@@ -107,7 +130,11 @@ public struct Money {
 ////////////////////////////////////
 // Job
 //
-open class Job {
+open class Job: CustomStringConvertible {
+    var description: String {
+        return ("Works at \(title) and gets paid \(calculateIncome(10))")
+    }
+    
     fileprivate var title : String
     fileprivate var type : JobType
     
@@ -143,7 +170,18 @@ open class Job {
 ////////////////////////////////////
 // Person
 //
-open class Person {
+open class Person: CustomStringConvertible {
+    var description: String {
+        var result = ("\(self.firstName) \(self.lastName), \(self.age)")
+        if let job = self._job {
+            result = result + ("), works at \(job)")
+        }
+        if let spouse = self._spouse {
+            result = result + (", is married to \(spouse)")
+        }
+        return result
+    }
+    
     open var firstName : String = ""
     open var lastName : String = ""
     open var age : Int = 0
@@ -182,7 +220,15 @@ open class Person {
 ////////////////////////////////////
 // Family
 //
-open class Family {
+open class Family: CustomStringConvertible {
+    var description: String {
+        var result = "Family:"
+        for i in self.members {
+            result = result + " \(i.description)"
+        }
+        return result
+    }
+    
     fileprivate var members : [Person] = []
     
     public init(spouse1: Person, spouse2: Person) {
